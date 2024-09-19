@@ -1,25 +1,34 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import '../../../styles/Main/Recommend/GenreRecommend.css'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import Pagination from 'react-js-pagination';
 
-const GenreRecommend = ({movie}) => {
+const GenreRecommend = () => {
+    const {genre} = useParams();
     const [movieGenreList, setMovieGenreList] = useState([]);
+    
+
+    //페이징
+    const [page, setPage] = useState(1);
+    const postPerPage = 9;
+    const indexOfLastPost = page * postPerPage;
+    const indexOfFirstPost = indexOfLastPost - postPerPage;
+    const [currentPost, setCurrentPost] = useState([]);
+    const currentPosts = movieGenreList.slice(indexOfFirstPost, indexOfLastPost);
+
     const url = process.env.REACT_APP_API_URL;
     const navigate = useNavigate(); 
-    
     const handleGenreClick = (genreId) => {
-        navigate(`/movie/${genreId}`, { replace: true }); // navigate to the movie detail page
-        window.location.reload(); // force refresh
+        navigate(`/movie/${genreId}`, { replace: true });
     };
 
     //장르별 데이터 출력
-    const getMovieGenres = async (movie) => {
+    const getMovieGenres = async (genre) => {
         try {
-            const genres = movie.genres
-            if (genres) {
+            if (genre) {
                 const resp = await axios.post(`${url}/movie/genresList`, 
-                    genres, 
+                    genre, 
                     { headers: { 'Content-Type': 'application/json' } }
                 );
                 setMovieGenreList(resp.data);
@@ -31,14 +40,19 @@ const GenreRecommend = ({movie}) => {
         }
     };
     useEffect(()=>{
-        getMovieGenres(movie);
-    },[movie]);
+        getMovieGenres(genre);
+    },[genre]);
+
+
+    const handlePageChange = (pageNumber) => {
+        setPage(pageNumber);
+    };
 
     return (
         <>
         <div className='genreList_container'>
             <div className='genre_lst'>
-                {movieGenreList && movieGenreList.map((genre, index) => (
+                {currentPosts && currentPosts.map((genre, index) => (
                     <li key={index} onClick={() => handleGenreClick(genre.id)}> 
                         <div className='genre_Img'>
                             <img src={`https://image.tmdb.org/t/p/w500${genre.poster_path}`} alt={genre.title}/>
@@ -47,8 +61,16 @@ const GenreRecommend = ({movie}) => {
                     </li>
                 ))}
             </div>
+            <Pagination
+                activePage={page}
+                itemsCountPerPage={postPerPage}
+                totalItemsCount={movieGenreList.length}
+                pageRangeDisplayed={5}
+                prevPageText={"‹"}
+                nextPageText={"›"}
+                onChange={handlePageChange}
+            />
         </div>
-            
         </>
     );
 };

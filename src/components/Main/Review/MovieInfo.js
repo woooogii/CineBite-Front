@@ -50,7 +50,7 @@ function MovieInfo({movie}) {
                 <div class="actors-list">
                     {movie.credits.cast.slice(0, 5).map(cast=>
                         <div class="actor">
-                            <img src={`${ImageUrl}${cast.profile_path}`} alt="제시카 알바"/>
+                            <img src={`${ImageUrl}${cast.profile_path}`}/>
                             <div class="actor-name">{cast.name}</div>
                         </div>
                     )}

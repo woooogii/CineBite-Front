@@ -5,17 +5,17 @@ import '../../../styles/Main/Home/movieRanking.css';
 
 function MovieRanking() {
   const [boxOfficeData,setBoxOfficeData] = useState([]);
-    const url = process.env.REACT_APP_API_URL;
-    const ImageUrl = process.env.REACT_APP_IMAGE_URL;
+  const url = process.env.REACT_APP_API_URL;
+  const ImageUrl = process.env.REACT_APP_IMAGE_URL;
 
-    const getMovieData= async()=>{
-        const response = await axios.get(`${url}/movie/movieRanking`);
-        console.log('boxOffice 출력',response.data);
-        setBoxOfficeData(response.data);
-    }
-    useEffect(()=>{
-        getMovieData();
-    },[]);
+  const getMovieData= async()=>{
+      const response = await axios.get(`${url}/movie/movieRanking`);
+      console.log('boxOffice 출력',response.data);
+      setBoxOfficeData(response.data);
+  }
+  useEffect(()=>{
+      getMovieData();
+  },[]);
   
   return <div>
     <div className='ranking-main'>

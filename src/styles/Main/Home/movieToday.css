@@ -107,9 +107,8 @@
 
 .today-recomend .slick-slide .today-image {
   position: relative;
-  width: 200px; /* 영화 아이템의 너비 설정 */
-  height: 300px; /* 영화 아이템의 높이 설정 */
-  margin: 0 5px; /* 아이템 간의 여백 추가 */
+  width: 250px; /* 영화 아이템의 너비 설정 */
+  height: 350px; /* 영화 아이템의 높이 설정 */
   display: flex;
   flex-direction: column;
   align-items: center;
