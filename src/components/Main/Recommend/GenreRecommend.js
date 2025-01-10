@@ -4,33 +4,17 @@ import '../../../styles/Main/Recommend/GenreRecommend.css'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Pagination from 'react-js-pagination';
 
-const GenreRecommend = () => {
-    const {genre} = useParams();
+const GenreRecommend = ({genres,movieId}) => {
     const [movieGenreList, setMovieGenreList] = useState([]);
+    const ImageUrl = process.env.REACT_APP_IMAGE_URL;
     
-
-    //페이징
-    const [page, setPage] = useState(1);
-    const postPerPage = 9;
-    const indexOfLastPost = page * postPerPage;
-    const indexOfFirstPost = indexOfLastPost - postPerPage;
-    const [currentPost, setCurrentPost] = useState([]);
-    const currentPosts = movieGenreList.slice(indexOfFirstPost, indexOfLastPost);
-
-    const url = process.env.REACT_APP_API_URL;
-    const navigate = useNavigate(); 
-    const handleGenreClick = (genreId) => {
-        navigate(`/movie/${genreId}`, { replace: true });
-    };
-
     //장르별 데이터 출력
-    const getMovieGenres = async (genre) => {
+    const getMovieGenres = async (genres) => {
+            
         try {
-            if (genre) {
-                const resp = await axios.post(`${url}/movie/genresList`, 
-                    genre, 
-                    { headers: { 'Content-Type': 'application/json' } }
-                );
+            console.log('movie: ',genres)
+            if (genres) {
+                const resp = await axios.post(`${url}/movie/genresList`, genres);
                 setMovieGenreList(resp.data);
             } else {
                 console.error('영화의 장르 데이터가 없습니다.');
@@ -40,9 +24,25 @@ const GenreRecommend = () => {
         }
     };
     useEffect(()=>{
-        getMovieGenres(genre);
-    },[genre]);
+        getMovieGenres(genres);
+    },[genres]);
 
+    //페이징
+    const [page, setPage] = useState(1);
+    const postPerPage = 9;
+    const indexOfLastPost = page * postPerPage;
+    const indexOfFirstPost = indexOfLastPost - postPerPage;
+
+    // movieId와 일치하는 항목 제외
+    const filteredGenreList = movieGenreList.filter(genre => genre.id !== Number(movieId));
+    const currentPosts = filteredGenreList.slice(indexOfFirstPost, indexOfLastPost);
+    console.log(filteredGenreList)
+
+    const url = process.env.REACT_APP_API_URL;
+    const navigate = useNavigate(); 
+    const handleGenreClick = (genreId) => {
+        navigate(`/movie/${genreId}`, { replace: true });
+    };
 
     const handlePageChange = (pageNumber) => {
         setPage(pageNumber);
@@ -52,10 +52,10 @@ const GenreRecommend = () => {
         <>
         <div className='genreList_container'>
             <div className='genre_lst'>
-                {currentPosts && currentPosts.map((genre, index) => (
+                {currentPosts.length > 0 && currentPosts.map((genre, index) => (
                     <li key={index} onClick={() => handleGenreClick(genre.id)}> 
                         <div className='genre_Img'>
-                            <img src={`https://image.tmdb.org/t/p/w500${genre.poster_path}`} alt={genre.title}/>
+                            <img src={`${ImageUrl}${genre.poster_path}`} alt={genre.title} />
                         </div>
                         <div className='genre_Info'></div>
                     </li>

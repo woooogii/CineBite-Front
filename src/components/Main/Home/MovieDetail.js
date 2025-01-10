@@ -266,7 +266,7 @@ const MovieDetail = () => {
                             <ul>{activeComponent === 'ReviewWrite' && <ReviewWrite />}</ul>
                             <ul className="genre_lst">
                                 {activeComponent === 'GenreRecommend' && (
-                                <GenreRecommend movie={movie} />
+                                <GenreRecommend genres={movie.genres} movieId={movieId}/>
                                 )}
                             </ul>
                         </div>

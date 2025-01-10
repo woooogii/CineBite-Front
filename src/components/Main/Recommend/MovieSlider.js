@@ -12,8 +12,8 @@ const MovieSlider = ({ title, endpoint, param, linkTo }) => {
     const ImageUrl = process.env.REACT_APP_IMAGE_URL;
     const getDataList = async () => {
         try {
+            console.log('param',param)
             const response = await axios.post(endpoint, param);
-            console.log('키워드별 데이터 출력:', response.data);
             setDataList(response.data);
         } catch (error) {
             console.error('데이터 가져오기 오류:', error);
